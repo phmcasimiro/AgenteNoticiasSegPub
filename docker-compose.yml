@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: agent_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - agent_network
+    restart: always
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: agent_backend
+    ports:
+      - "8001:8001"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      # Load other env vars from .env file
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    volumes:
+      - ./data:/app/data
+    networks:
+      - agent_network
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agent_frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://backend:8001
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    networks:
+      - agent_network
+    restart: always
+
+volumes:
+  redis_data:
+
+
+networks:
+  agent_network:
+    driver: bridge
+
+# --- GCP Artifact Registry Instructions ---
+# 1. Tag Backend:
+# docker tag agent_backend us-central1-docker.pkg.dev/[PROJECT_ID]/[REPO_NAME]/backend:v1
+# 2. Tag Frontend:
+# docker tag agent_frontend us-central1-docker.pkg.dev/[PROJECT_ID]/[REPO_NAME]/frontend:v1
+# 3. Push:
+# docker push us-central1-docker.pkg.dev/[PROJECT_ID]/[REPO_NAME]/backend:v1
+# docker push us-central1-docker.pkg.dev/[PROJECT_ID]/[REPO_NAME]/frontend:v1

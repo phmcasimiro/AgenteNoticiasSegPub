@@ -1,0 +1,8 @@
+.env
+auth_config.yaml
+
+data/*.db
+__pycache__/
+*.pyc
+venv/
+.vscode/

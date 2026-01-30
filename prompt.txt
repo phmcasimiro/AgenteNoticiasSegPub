@@ -1,0 +1,226 @@
+# BLUEPRINT DE RECONSTRUÇÃO: AgenteNoticiasSegPub
+# Guia de Engenharia de Prompt para Desenvolvimento Modular
+
+## 1. CONCEITO E ESTRATÉGIA
+Este documento contém uma sequência de prompts otimizada para reconstruir o projeto "Agente de Notícias de Segurança Pública" do zero, utilizando as melhores práticas de Engenharia de Prompt (4Cs, O-R-A, Few-Shot).
+
+### DNA do Projeto
+- **Arquitetura**: Microsserviços (Frontend Streamlit + Backend FastAPI + Redis + Worker).
+- **Stack**: Python 3.10, Docker Compose, SQLite.
+- **Diferencial**: Resiliência (Circuit Breaker, Fallback de IA) e Testabilidade.
+
+---
+
+## 2. SYSTEM PROMPT MESTRE (A Persona)
+*Copie este prompt para definir o contexto inicial da sessão com a IA (ChatGPT/Claude/Gemini).*
+
+```json
+{
+  "role": "system",
+  "content": "Você é um Arquiteto de Software Sênior especializado em Python e Microsserviços. 
+  
+  SUA MISSÃO: Liderar o desenvolvimento do 'AgenteNoticiasSegPub', um sistema de inteligência para monitoramento de segurança pública.
+  
+  DIRETRIZES TÉCNICAS (REGRAS):
+  1. Stack: FastAPI (Backend), Streamlit (Frontend), Redis (Cache), SQLite (Persistência).
+  2. Padrões: Use Type Hinting, Pydantic para validação e PEP-8.
+  3. Resiliência: Implemente logs estruturados e tratamento de erros defensivo (Try/Except).
+  4. Segurança: Nunca exponha chaves de API. Use variáveis de ambiente (.env).
+  5. Documentação: Adicione docstrings explicativas em todas as funções.
+
+  FORMATO DE RESPOSTA:
+  - Sempre forneça o caminho do arquivo (ex: `backend/main.py`).
+  - Explique brevemente as decisões arquiteturais antes do código.
+  - O código deve ser completo e funcional."
+}
+```
+
+---
+
+## 3. FASE 1: INFRAESTRUTURA E AMBIENTE
+*Objetivo: Criar a base dockerizada e estrutura de pastas.*
+
+### Prompt 1.1: Estrutura e Docker
+**User Message:**
+```text
+Atue como DevOps Engineer. Crie a infraestrutura inicial do projeto.
+
+OBJETIVO: Configurar um ambiente Docker Compose orquestrando Frontend, Backend e Redis.
+
+REGRAS:
+1. Estrutura de diretórios:
+   - /backend (FastAPI)
+   - /data (SQLite persistente)
+   - Raiz: app.py (Streamlit), Dockerfile, docker-compose.yml, requirements.txt
+2. Services no docker-compose:
+   - `backend`: Porta 8001, build local, depende do Redis.
+   - `frontend`: Porta 8501, build local, depende do backend.
+   - `redis`: Imagem alpine oficial.
+3. Variáveis de ambiente: Crie um .env.example com placeholders para APP_API_KEY, GROQ_API_KEY, GOOGLE_API_KEY, NEWS_API_KEY.
+
+AÇÃO:
+Gere os arquivos: `metrics` (estrutura de pastas), `docker-compose.yml`, `Dockerfile` (multistage para leveza) e `requirements.txt` (incluindo fastapi, uvicorn, streamlit, requests, redis, feedparser, duckduckgo-search, groq, google-generativeai, apscheduler).
+```
+
+---
+
+## 4. FASE 2: BACKEND CORE E DADOS
+*Objetivo: Implementar a API, Banco de Dados e Logs.*
+
+### Prompt 2.1: Modelos e Banco de Dados
+**User Message:**
+```text
+Agora vamos implementar a persistência de dados.
+
+OBJETIVO: Criar o módulo de banco de dados e modelos Pydantic.
+
+ARQUIVOS:
+1. `backend/models.py`:
+   - Classe `NewsItem` (Pydantic) com: id, title, url, publishedAt (datetime), source, snippet, language.
+2. `backend/database.py`:
+   - Funções: `init_db` (cria tabela `noticias` se não existir), `save_to_db` (upsert/ignore duplicatas por ID), `search_db` (busca por keyword).
+   - Base: SQLite (`data/noticias.db`).
+
+REGRAS:
+- Use `sqlite3` nativo com context manager.
+- Implemente logging para cada operação (sucesso/erro).
+```
+
+### Prompt 2.2: API Main e Segurança
+**User Message:**
+```text
+Implemente o ponto de entrada da API.
+
+OBJETIVO: Criar `backend/main.py`.
+
+FUNCIONALIDADES:
+1. Middleware de Segurança: Valide o header `X-API-Key` contra a env `APP_API_KEY`. Retorne 401 se inválido.
+2. Endpoint `GET /news`:
+   - Recebe `q` (query).
+   - Lógica de Cache (Redis): Se a chave `noticias:{q}` existir no Redis, retorne o cache.
+   - Se não, busque no Banco de Dados.
+   - (Deixe um placeholder `# TODO: External Fetch` se DB vazio).
+3. Endpoint `GET /chat`:
+   - Placeholder para o agente de IA.
+
+AÇÃO: Gere o código completo do `backend/main.py` integrando `redis`, `logging` e `database`.
+```
+
+---
+
+## 5. FASE 3: LÓGICA DE NEGÓCIO (ETL & AI)
+*Objetivo: Coletores de Notícias e Agente Inteligente.*
+
+### Prompt 3.1: Fetchers (Coletores)
+**User Message:**
+```text
+Desenvolva os coletores de notícias externas.
+
+OBJETIVO: Criar `backend/fetchers.py` com a classe `NewsFetcher`.
+
+MÉTODOS:
+1. `fetch_google_rss(query)`: Use `feedparser` no Google News RSS (pt-BR). Identifique data de publicação.
+2. `fetch_gdelt(query)`: Use `httpx` para consultar a API GDELT GKG 2.0 (timespan 24h).
+3. `fetch_ddg(query)`: Use `duckduckgo_search` para resultados web.
+4. `fetch_all(query)`: Agrega resultados de todos os métodos, remove duplicatas (hash do URL) e retorna Lista de `NewsItem`.
+
+REGRAS:
+- Trate erros de conexão (Try/Except) para que a falha de uma fonte não pare as outras.
+- Gere IDs únicos usando hash SHA256 da URL.
+```
+
+### Prompt 3.2: Agendador (Scheduler)
+**User Message:**
+```text
+Configure a automação de coleta.
+
+OBJETIVO: Atualizar `backend/main.py` para incluir o APScheduler.
+
+AÇÃO:
+1. Crie uma função `scheduled_fetch_job` que chama `fetcher.fetch_all("segurança publica Distrito Federal")` e salva no DB.
+2. Inicialize o `AsyncIOScheduler` no startup da API.
+3. Configure Jobs Cron para rodar às 11:00 e 23:00.
+4. Adicione um endpoint `POST /force-fetch` para execução manual imediata.
+```
+
+### Prompt 3.3: Agente de IA com Fallback
+**User Message:**
+```text
+Implemente a inteligência do sistema com resiliência.
+
+OBJETIVO: Criar `backend/agent.py`.
+
+LÓGICA:
+1. Função `get_agent_response(query)`:
+   - Tenta consultar a API Groq (Model: llama-3.3-70b).
+   - Prompt do Sistema: "Analista de Inteligência Policial. Responda em tópicos com base em fontes reais."
+   - Ferramentas (Function Calling): Permita que o LLM chame uma função de busca (DDGS) se precisar de fatos recentes.
+   
+2. Lógica de Fallback (Circuit Breaker):
+   - Envolva a chamada Groq em Try/Except.
+   - Se falhar (RateLimit ou Erro), chame `get_gemini_response(query)` usando `google.generativeai` (Gemini Flash).
+   - Logue avisos quando o fallback for ativado.
+
+AÇÃO: Gere o código completo de `backend/agent.py` demonstrando esse padrão de resiliência.
+```
+
+---
+
+## 6. FASE 4: FRONTEND
+*Objetivo: Interface do Usuário com Streamlit.*
+
+### Prompt 4.1: Aplicação Streamlit
+**User Message:**
+```text
+Crie o painel visual.
+
+OBJETIVO: Criar `app.py`.
+
+LAYOUT:
+1. Sidebar: Configuração da API Key e Status do Sistema (Redis Online? API Online?).
+2. Tab 1 "Monitoramento":
+   - Input de busca.
+   - Mostra notícias em Cards (st.container com borda).
+   - Badge mostrando a fonte (Google/GDELT).
+3. Tab 2 "Agente de Inteligência":
+   - Interface de Chat (st.chat_message).
+   - Envia pergunta para `POST /chat` do backend.
+
+INTEGRAÇÃO:
+- O Frontend não acessa banco de dados. Ele consome a API (`http://backend:8001`) usando `requests`.
+```
+
+---
+
+## 7. FASE 5: QUALIDADE E TESTES
+*Objetivo: Garantir estabilidade (Pytest + GitHub Actions).*
+
+### Prompt 5.1: Testes Automatizados
+**User Message:**
+```text
+Atue como QE Engineer. Crie a suíte de testes.
+
+OBJETIVO: Criar testes unitários e de integração na pasta `tests/`.
+
+ARQUIVOS:
+1. `tests/test_api.py`: Use `TestClient` para validar endpoints `/news` (Auth 401, Sucesso 200).
+2. `tests/test_core_logic.py`:
+   - Teste `save_to_db`: Salve item, busque e verifique se existe.
+   - Teste `deduplication`: Salve o mesmo item 2x, verifique se count == 1.
+   - Mock: Use `:memory:` para o banco SQLite nos testes.
+3. `tests/test_scheduler.py`: Verifique se os Jobs estão agendados corretamente no schedule.
+
+AÇÃO: Forneça o código dos testes usando `pytest` e `unittest.mock`.
+```
+
+### Prompt 5.2: CI/CD Pipeline
+**User Message:**
+```text
+Automatize a execução dos testes.
+
+OBJETIVO: Criar `.github/workflows/schedule_test.yml`.
+
+AÇÃO:
+- Trigger: Push na main.
+- Steps: Checkout, Setup Python 3.10, Install Requirements, Run Pytest.
+```
