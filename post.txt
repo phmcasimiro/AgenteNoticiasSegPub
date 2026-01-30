@@ -1,0 +1,69 @@
+De Notebook a Microsserviço: Engenharia de Software aplicada à IA Generativa
+
+Mais uma solução construída a partir do conhecimento adquirido na Pós-Graduação em IA Generativa do IBMEC/PCDF. Apresento o **AgenteNoticiasSegPub**, uma solução completa de Inteligência Artificial para monitoramento de Segurança Pública.
+
+O que começou como um conceito em um notebook Google Colab durante as aulas evoluiu para uma aplicação robusta e escalável. A partir de scripts isolados, foquei em **Engenharia de Software** de ponta a ponta para entregar valor real.
+
+**Arquitetura da Solução:**
+Desenhei um ecossistema de microsserviços orquestrados via **Docker Compose**, priorizando escalabilidade e manutenção:
+- **Backend**: API RESTful robusta com **FastAPI**.
+- **Frontend**: Interface intuitiva e interativa em **Streamlit**.
+- **Performance**: Implementação de **Redis** para caching de alta performance e *Circuit Breaker* para garantir resiliência.
+- **Inteligência**: Sistema híbrido com Agentes LLM (Llama 3 via Groq) e fallback automático (Gemini).
+
+**Acelerado por Agentes de IA e Engenharia de Contexto**
+Neste projeto, a IA não foi apenas o produto final, mas o motor do desenvolvimento. Atuando como Arquiteto e Líder Técnico, utilizei técnicas avançadas de **Engenharia de Prompt** e **Engenharia de Contexto** para orquestrar Agentes de IA, acelerando desde a escrita de testes até pipelines de CI/CD.
+
+**Legado de Conhecimento (Prompt Engineering)**
+Para compartilhar essa experiência, adicionei ao final do README (e nos arquivos `prompt.txt` e `prompt2.txt`) duas seções valiosas:
+1.  **Guia Didático (`prompt2.txt`)**: Uma aula sobre a anatomia de prompts eficazes (Regra dos 4Cs, Estrutura O-R-A) e arquitetura de mensagens (System/User/Assistant).
+2.  **Blueprint de Reconstrução (`prompt.txt`)**: Um roteiro passo a passo com prompts otimizados que permitem a qualquer desenvolvedor reconstruir este projeto do zero utilizando LLMs.
+
+Essa abordagem me permitiu focar no que realmente importa: Design Patterns, Segurança e Regras de Negócio, enquanto a IA acelerava o boilerplate.
+
+**Engenharia Profissional:**
+- Pipeline de **CI/CD** com GitHub Actions.
+- Testes automatizados (Unitários e de Integração) com `pytest`.
+- Padrões estritos de qualidade de código.
+
+Este projeto materializa a visão de que a IA não substitui o engenheiro, mas o "bioniza", permitindo construir sistemas complexos de modo célere e seguro.
+
+Repositório: https://github.com/phmcasimiro/AgenteNoticiasSegPub
+
+#GenerativeAI #SoftwareEngineering #PromptEngineering #Python #FastAPI #Docker #AIgents #PublicSafety #IBMEC
+
+-------
+
+**From Notebook to Microservice: Software Engineering applied to Generative AI**
+
+I am proud to share another solution built upon the knowledge acquired during the Post-Graduate program in Generative AI at IBMEC/PCDF. Introducing **AgenteNoticiasSegPub**, a comprehensive AI-driven platform designed for Public Safety monitoring.
+
+What started as a concept in a Google Colab notebook has evolved into a robust, scalable application. Moving beyond isolated scripts, I focused on end-to-end **Software Engineering** to deliver real-world value.
+
+**Solution Architecture:**
+I planned and executed a microservices ecosystem orchestrated via Docker Compose:
+- **Backend**: Robust RESTful API powered by **FastAPI**.
+- **Frontend**: Intuitive interface built with **Streamlit**.
+- **Performance**: **Redis** for high-performance caching and Circuit Breakers for resilience.
+- **Intelligence**: Hybrid system featuring LLM Agents (Llama 3) with automatic fallback to Gemini.
+
+**AI-Accelerated Development & Context Engineering**
+In this project, AI wasn't just the end product; it was a key part of the development workflow. Acting as Architect and Tech Lead, I leveraged **Prompt Engineering** and **Context Engineering** to orchestrate AI Agents, accelerating everything from unit tests to CI/CD pipelines.
+
+**Knowledge Legacy (Prompt Engineering)**
+To share this expertise, I added two dedicated sections to the README (and files `prompt.txt`, `prompt2.txt`):
+1.  **Didactic Guide**: Explaining the anatomy of effective prompts (4Cs, O-R-A) and message structure.
+2.  **Construction Blueprint**: A step-by-step "instruction manual" allowing anyone to reconstruct this project from scratch using LLMs.
+
+This approach allowed me to focus on Design Patterns, Security, and Business Logic, while AI handled the heavy lifting.
+
+**Professional Engineering Standards:**
+- **CI/CD** Pipelines with GitHub Actions.
+- Automated Testing using `pytest`.
+- Strict code quality standards.
+
+This project embodies the vision that AI does not replace the engineer; instead, it empowers us to build complex, secure, and resilient systems with unprecedented speed.
+
+Repository: https://github.com/phmcasimiro/AgenteNoticiasSegPub
+
+#GenerativeAI #SoftwareEngineering #PromptEngineering #Python #MLOps #PublicSafety #Docker #FastAPI #AI

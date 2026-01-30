@@ -29,6 +29,16 @@ init_db()
 
 app = FastAPI(title=APP_TITLE)
 
+# --- CORS Middleware (Required for Streamlit Cloud -> Render) ---
+from fastapi.middleware.cors import CORSMiddleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # Em produção, substitua pelo domínio do Streamlit App
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # --- Security Middleware ---
 from fastapi import Request, HTTPException, status
 from fastapi.responses import JSONResponse
