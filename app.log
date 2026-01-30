@@ -231,3 +231,6 @@
 2026-01-30 10:34:43,971 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
 2026-01-30 10:34:43,984 - apscheduler.scheduler - INFO - Scheduler started
 2026-01-30 10:34:43,993 - AgenteSegPub - INFO - ⏰ Scheduler started (Jobs at 11:00 and 23:00)
+2026-01-30 11:59:28,997 - AgenteSegPub - INFO - Database initialized/checked.
+2026-01-30 11:59:29,019 - AgenteSegPub - WARNING - ⚠️ ADD_API_KEY not set! using insecure default for dev.
+2026-01-30 11:59:30,213 - AgenteSegPub - INFO - 🚀 Starting up Intelligence News Hub...

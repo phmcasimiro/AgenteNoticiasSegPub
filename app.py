@@ -16,16 +16,26 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- AUTHENTICATION ---
-try:
-    with open('auth_config.yaml') as file:
-        config = yaml.load(file, Loader=SafeLoader)
-except FileNotFoundError:
-    st.error("Arquivo de configuração de autenticação (auth_config.yaml) não encontrado.")
-    st.stop()
-except Exception as e:
-    st.error(f"Erro ao ler config: {e}")
-    st.stop()
+# --- AUTHENTICATION CONFIGURATION ---
+config = None
+
+# 1. Tentar carregar de st.secrets (Produção/Streamlit Cloud)
+# O Streamlit carrega secrets automaticamente como um dicionário
+if 'credentials' in st.secrets:
+    config = st.secrets
+
+# 2. Se não houver secrets, tentar carregar arquivo local (Desenvolvimento)
+if not config:
+    try:
+        with open('auth_config.yaml') as file:
+            config = yaml.load(file, Loader=SafeLoader)
+    except FileNotFoundError:
+        st.error("❌ Erro Crítico: Configuração de autenticação não encontrada.")
+        st.info("Para resolver no Streamlit Cloud: Adicione o conteúdo de 'auth_config.yaml' na seção 'Secrets' do painel.")
+        st.stop()
+    except Exception as e:
+        st.error(f"❌ Erro ao ler config local: {e}")
+        st.stop()
 
 try:
     authenticator = stauth.Authenticate(
