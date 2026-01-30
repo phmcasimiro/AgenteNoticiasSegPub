@@ -22,7 +22,12 @@ config = None
 # 1. Tentar carregar de st.secrets (Produção/Streamlit Cloud)
 try:
     if 'credentials' in st.secrets:
-        config = st.secrets
+        # CONVERSÃO CRÍTICA: st.secrets é imutável. O Authenticador precisa escrever nele.
+        # Convertemos para um dict padrão do Python recursivamente.
+        def to_dict(obj):
+            return {k: to_dict(v) if isinstance(v, dict) else v for k, v in obj.items()}
+        
+        config = to_dict(st.secrets)
 except Exception:
     # Se st.secrets falhar (ex: não existe arquivo secrets.toml local),
     # apenas ignoramos e tentamos o arquivo yaml abaixo.
