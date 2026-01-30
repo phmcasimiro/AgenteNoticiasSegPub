@@ -1,0 +1,485 @@
+ENG. PROMPT & ENG. CONTEXTO
+
+Anatomia de Prompts Eficazes: Conceitos e Funcionamento Detalhado
+
+
+PADRÕES DE EFETIVIDADE COMPROVADOS
+
+1. Regra dos 4 Cs de Prompts Eficazes:
+
+Claro: Instruções sem ambiguidade
+Conciso: Elimina redundância, mantém essencial
+Completo: Inclui todos os requisitos
+Consistente: Padrão previsível nas respostas
+
+2. Estrutura O-R-A (Objetivo-Regras-Ação):
+OBJETIVO: O que deve ser alcançado
+REGRAS: Limitações e condições
+AÇÃO: Processo específico a seguir
+
+
+3. Hierarquia de Prioridades em System Prompts:
+
+Segurança/Ética (não negociável)
+Formato/Especificação (crítico para integração)
+Domínio/Expertise (qualidade da resposta)
+Estilo/Comunicação (experiência do usuário)
+
+ESTRUTURA DE MENSAGENS: SYSTEM/USER/ASSISTANT
+
+Sistemas de LLM modernos (especialmente OpenAI, Anthropic, etc.) utilizam um sistema de papéis hierárquico que organiza a conversa em três tipos de mensagens:
+
+System Message (Mensagem do Sistema)
+
+Propósito: Configurar o contexto permanente e as regras do comportamento do modelo
+
+Características:
+É a primeira mensagem na conversa
+Permanece visível para o modelo durante todo o diálogo
+Define o comportamento base do assistente
+Não recebe resposta direta do modelo
+
+No projeto Agente de Notícias de Segurança Pública, o System Message consolidou as regras de negócio: foco no DF, uso de fontes policiais e o tom de inteligência estratégica.
+
+Exemplo de Prompt:
+
+{
+  "role": "system",
+  "content": "Você é o núcleo de inteligência do AgenteNoticiasSegPub. Sua função é analisar dados de segurança pública do Distrito Federal. 
+              REGRAS:
+              1. Foco exclusivo em PMDF, PCDF, CBMDF e incidentes no DF.
+              2. Extraia fatos: Local, Hora, Envolvidos e Desfecho.
+              3. Identifique riscos ou tendências criminais.
+              4. Formate a saída sempre em JSON estruturado para alimentar o banco SQLite.
+              5. Tom: Profissional, técnico e imparcial."
+}
+
+Resultado:
+Definiu a persona (quem você é)
+Estabeleceu restrições (o que não fazer)
+Especificou formatação (como responder)
+Configurou o tom e estilo
+
+User Message (Mensagem do Usuário)
+
+Propósito: Representa a entrada do usuário/humano
+
+Características:
+Contém a pergunta ou instrução atual
+Pode incluir dados ou contexto específico
+É o gatilho para uma resposta
+Pode ser múltiplas mensagens em sequência
+
+Exemplo:
+{
+  "role": "user", 
+  "content": "Resultados da busca web: [CONTEÚDO BRUTO DO DUCKDUCKGO]. 
+              Com base nesses dados, gere o relatório de inteligência sobre a operação da PCDF em Ceilândia mencionada nos links."
+}
+
+Resultado: A User Message no neste projeto não foi apenas uma pergunta, mas forneceu os dados brutos (vindos do DuckDuckGo ou RSS) para que a IA trabalhe.
+
+Assistant Message (Mensagem do Assistente)
+
+Propósito: Representa as respostas prévias do modelo
+
+Características:
+Histórico de respostas anteriores
+Mantém o contexto da conversa
+Usado para few-shot learning (exemplos)
+Pode demonstrar padrões de resposta
+
+Exemplo (treinar o modelo dentro da conversa):
+[
+    {
+      "role": "user", 
+      "content": "Notícia: 'PMDF apreende drogas no Gama nesta tarde'."
+    },
+    {
+      "role": "assistant", 
+      "content": "{\"status\": \"sucesso\", \"analise\": {\"forca\": \"PMDF\", \"local\": \"Gama\", \"incidente\": \"Apreensão de entorpecentes\"}}"
+    },
+    {
+      "role": "user", 
+      "content": "Notícia: 'PCDF deflagra operação contra roubo de veículos em Taguatinga'."
+    }
+]
+
+RESULTADO: Este projeto salva dados no SQLite, então a IA não pode errar o formato do JSON. Usamos a Assistant Message para dar um exemplo (Few-Shot), ou seja, utilizamos uma técnica eficaz para garantir que o Backend não quebre.
+
+PAPEL DO SYSTEM PROMPT NA DEFINIÇÃO DE COMPORTAMENTO
+
+Funcionamento: O system prompt é injetado virtualmente antes de cada interação, mantendo-se no contexto do modelo sem consumir tokens do limite da conversa principal em algumas implementações.
+
+Componentes Estratégicos de um System Prompt Eficaz:
+
+A. Definição de Identidade (Persona)
+
+system prompt = 
+"""
+Você é 'AgenteSegPub-Core', um assistente especializado em:
+1. Monitoramento de incidentes de segurança
+2. Análise de tendências criminais
+3. Identificação de fake news em segurança pública
+4. Extração de metadados operacionais
+
+Sua expertise inclui:
+- Estrutura das forças de segurança do DF (PMDF, PCDF, CBMDF)
+- Tipificação penal básica
+- Geografia e regiões administrativas do Distrito Federal
+"""
+Resultado: Alinha o modelo com domínio específico, melhorando precisão.
+
+B. Regras de Comportamento (Constraints)
+
+system prompt = 
+"""
+REGRAS ABSOLUTAS:
+1. NUNCA invente fatos ou incidentes não reportados
+2. SEMPRE cite a fonte da notícia (link original)
+3. Ignore notícias de outros estados fora do DF/Entorno
+4. SEMPRE mantenha neutralidade política na análise
+
+LIMITAÇÕES:
+- Base de conhecimento atualizada até a data do modelo
+- Foco em segurança pública e defesa civil
+- Não realiza denúncias formais, apenas análise de dados públicos
+"""
+Resultado: Reduz alucinações e mantém respostas dentro dos limites.
+
+C. Instruções de Processamento (Process)
+
+system prompt = 
+"""
+PROCESSO DE ANÁLISE (siga sempre nesta ordem):
+1. Filtragem: Identificar se é notícia de segurança no DF
+2. Extração: Coletar Local, Data, Tipo de Crime, Envolvidos
+3. Validação: Verificar credibilidade da fonte
+4. Estruturação: Formatar o JSON para o banco de dados
+
+ETAPAS OBRIGATÓRIAS:
+- Normalizar nomes de regiões administrativas (ex: 'Ceilândia Norte' -> 'Ceilândia')
+- Converter datas relativas ('hoje', 'ontem') para ISO8601
+- Gerar resumo curto (snippet) para exibição mobile
+"""
+
+Resultado: Garante consistência e abordagem sistemática.
+
+D. Configuração de Tom e Estilo (Tone)
+
+system prompt = 
+"""
+CONFIGURAÇÃO DE COMUNICAÇÃO:
+- Tom: Jornalístico e Analítico
+- Público-alvo: Analistas de inteligência e gestores
+- Nível técnico: Intermediário (uso correto de termos policiais)
+- Idioma: Português brasileiro formal
+
+DIRETRIZES DE RESPOSTA:
+- Seja conciso e direto ao ponto (estilo 'Briefing')
+- Use marcadores para listar ocorrências
+- Destaque entidades importantes (nomes, locais) em **negrito**
+- Inclua classificação de gravidade no início
+"""
+Resultado: Adapta a comunicação ao público-alvo.
+
+Técnicas Avançadas de System Prompt
+
+E. Prompt de Múltiplas Camadas
+
+
+system prompt = 
+"""
+# CAMADA 1: IDENTIDADE
+Você é um analista de inteligência de segurança pública.
+
+# CAMADA 2: PROCESSAMENTO
+Siga este fluxo: 
+Coletar Notícia → Extrair Entidades → Validar Geo-localização → Classificar Risco → Gerar JSON
+
+# CAMADA 3: VALIDAÇÃO
+Antes de responder, verifique:
+✓ A notícia é realmente do DF?
+✓ O JSON gerado respeita o schema do banco de dados?
+✓ A data está no formato correto?
+"""
+
+F. Prompt Dinâmico com Placeholders
+
+system prompt = 
+"""
+Você é um especialista em {forca_seguranca} (ex: PMDF, PCDF).
+Sua tarefa é analisar {tipo_incidente}.
+O formato de resposta deve ser {formato_saida} (ex: JSON, Relatório PDF).
+O nível de detalhe deve ser {nivel_detalhe} (ex: Estratégico, Operacional).
+"""
+
+G. Prompt com Auto-reflexão
+
+Exemplo de system prompt = 
+"""
+Antes de responder, pense:
+1. Esta notícia tem relevância para a segurança pública?
+2. A fonte é confiável ou parece sensacionalista?
+3. Como posso estruturar os dados para facilitar a busca futura?
+4. Quais campos do banco de dados (tabela 'noticias') são obrigatórios?
+
+Após pensar, gere apenas o JSON final.
+"""
+
+FORMATAÇÃO DE SAÍDA: TÉCNICAS AVANÇADAS
+
+
+H. JSON (JavaScript Object Notation)
+
+Vantagens: Estrutura parseável, ideal para integração com sistemas (Backend FastAPI)
+
+Como usar:
+
+Schema explícito: Defina exatamente a estrutura esperada (Pydantic Models)
+
+Tipos de dados: Especifique string, number, boolean, array
+
+Enums limitados: Use valores pré-definidos quando possível
+
+Exemplo mínimo: Inclua exemplo se o schema for complexo
+
+```python
+Prompt=
+"""
+Extraia as informações da notícia policial abaixo.
+
+NOTÍCIA: {texto_noticia}
+
+FORMATO DE RESPOSTA (JSON válido para API):
+{
+    "incidentes": [
+        {
+            "titulo": "string",
+            "tipo_crime": "Roubo|Homicídio|Tráfico|Outro",
+            "localizacao": {
+                "cidade": "string (RA do DF)",
+                "bairro": "string"
+            }
+        }
+    ],
+    "data_ocorrencia": "YYYY-MM-DDTHH:MM:SS",
+    "envolvidos": {
+        "vitimas": "int (estimado)",
+        "suspeitos_presos": "int"
+    },
+    "nivel_risco": "alto|medio|baixo",
+    "resumo_analitico": "string"
+}
+
+RESPONDA APENAS COM O JSON:
+"""
+```
+
+I. XML (eXtensible Markup Language)
+
+Vantagens: Hierarquia clara, namespaces, validação via XSD
+
+```python
+Prompt=
+"""
+Analise o boletim de ocorrência e retorne no formato XML:
+
+<analise_boletim>
+    <metadata>
+        <origem>PMDF</origem>
+        <data_processamento>ISO8601</data_processamento>
+    </metadata>
+    <ocorrencia tipo="patrimonial|vida">
+        <natureza>string</natureza>
+        <local>
+             <ra>Ceilândia</ra>
+             <logradouro>QNN 03</logradouro>
+        </local>
+    </ocorrencia>
+    <desfecho>
+        <status>Preso em Flagrante</status>
+        <apreencoes>
+            <item>Arma de Fogo</item>
+            <qtd>1</qtd>
+        </apreencoes>
+    </desfecho>
+</analise_boletim>
+
+Boletim: {texto}
+"""
+```
+
+J. Markdown
+
+Vantagens: Legibilidade humana, rico em formatação, amplamente suportado (Frontend Streamlit)
+
+```python
+Exemplo de prompt:
+# Gerar relatório para visualização no Streamlit
+
+"""
+Analise os dados de criminalidade da semana e formate a resposta em Markdown:
+
+# 📊 Relatório Semanal de Segurança - {regiao_admin}
+
+## 🔍 **Panorama Geral**
+{resumo_conciso_situacao}
+
+## 📈 **Indicadores Chave**
+| Natureza | Qtd | Tendência | Observação |
+|----------|-----|-----------|------------|
+| Roubo a Pedestre | {valor} | {seta} | {texto} |
+| Tráfico | {valor} | {seta} | {texto} |
+
+## ⚠️ **Pontos de Atenção (Hotspots)**
+### Risco Elevado
+- **{local1}**: {motivo_alerta}
+
+### Monitoramento
+- {local2}
+
+## ✅ **Ações Recomendadas**
+1. **Prioridade**: {acao1}
+2. Sugestão: {acao2}
+
+## 📎 **Fontes Analisadas**
+"""
+```
+
+L. Técnicas Híbridas e Estratégicas 
+
+L1. Formatação Condicional
+
+```python
+prompt = """
+Se a entrada for uma notícia estruturada (API), use JSON.
+Se for um resumo para o usuário (Chat), use Markdown.
+Se for um log de erro do sistema, use XML.
+
+Estrutura JSON para DB:
+{json_news_item_schema}
+
+Estrutura Markdown para Chat:
+{markdown_chat_template}
+
+Entrada: {input_data}
+"""
+```
+
+L2. Delimitadores Explícitos
+
+```python
+prompt = """
+Comece sua resposta com: ###INICIO_JSON###
+Termine sua resposta com: ###FIM_JSON###
+
+Entre esses delimitadores, forneça apenas JSON válido para o Backend:
+
+{
+    "id": "hash_sha256",
+    "title": "string",
+    "url": "string",
+    "publishedAt": "datetime",
+    "source": "string",
+    "snippet": "string"
+}
+
+Analise: {texto_noticia}
+"""
+```
+
+L3. Templates com Placeholders
+
+```python
+prompt = """
+Preencha o template de Briefing Diário abaixo:
+
+BRIEFING DE SEGURANÇA - INTELLIGENCE HUB
+========================================
+ID Relatório: {id_gerado}
+Data: {data_hoje}
+
+RESUMO EXECUTIVO:
+{resumo_3_linhas}
+
+DESTAQUES OPERACIONAIS (Top 3):
+1. {destaque1}
+2. {destaque2}
+3. {destaque3}
+
+TENDÊNCIA DO DIA:
+{analise_tendencia}
+
+GRAU DE NORMALIDADE: {status_operacional}
+
+Fontes: {lista_fontes}
+
+Preencha {campo} com informações extraídas do Feed RSS.
+"""
+```
+
+
+M. EXEMPLO COMPLETO INTEGRADO
+
+OBS: O modelo responderá como "assistant" seguindo as diretrizes
+
+
+```python
+# SYSTEM PROMPT (definição de comportamento)
+system_message = {
+    "role": "system",
+    "content": """
+    Você é 'SegPub-AI', o motor de inteligência do AgenteNoticiasSegPub.
+    
+    MISSÃO: Transformar notícias brutas em inteligência acionável para o Banco de Dados.
+    
+    REGRAS ABSOLUTAS:
+    1. Nunca altere a URL ou Título original da notícia
+    2. Normalize as datas para UTC
+    3. Categorize a notícia: 'Crítica', 'Alerta', 'Informativa'
+    4. Ignore conteúdo de entretenimento ou esportes
+    
+    PROCESSO PADRÃO:
+    1. Ler título e snippet
+    2. Identificar se é segurança pública (Filtro)
+    3. Extrair metadados (Data, Fonte)
+    4. Gerar JSON compatível com `NewsItem`
+    
+    FORMATAÇÃO:
+    - Use Markdown quando falar com o usuário no Chat
+    - Use JSON estrito quando salvar no Banco de Dados
+    
+    TOM: Objetivo, técnico, sem sensacionalismo.
+    """
+}
+
+# USER PROMPT (tarefa específica)
+user_message = {
+    "role": "user",
+    "content": """
+    Analise o feed RSS abaixo e retorne o JSON para inserção no SQLite.
+    
+    FORMATO EXATO REQUERIDO (Lista de NewsItem):
+    ```json
+    [
+        {
+            "id": "string (hash)",
+            "title": "string",
+            "url": "string",
+            "publishedAt": "ISO8601",
+            "source": "string",
+            "snippet": "string",
+            "analise_ia": {
+                "categoria": "string",
+                "risco": "alto|medio|baixo"
+            }
+        }
+    ]
+    ```
+    FEED RSS:
+    [CONTEÚDO DO FEED GOOGLE NEWS AQUI]
+    """
+}
+```
+.

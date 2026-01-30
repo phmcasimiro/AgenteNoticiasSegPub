@@ -153,7 +153,7 @@ A jornada de transformação deste projeto de um notebook acadêmico para um pro
 ﻿
 
 
-## 📂 Estrutura do Projeto
+## Estrutura do Projeto
 
 Abaixo, um esquema dos principais diretórios e arquivos do projeto:
 
@@ -184,7 +184,7 @@ AgenteNoticiasSegPub/
 │   ├── test_core_logic.py# Testes Unitários (Banco de Dados e Parsers).
 │   └── test_agent_mock.py# Testes de Resiliência (Fallback de IA).
 │
-└── .github/              # ⚙️ Automação (DevOps)
+└── .github/              # Automação (DevOps)
     └── workflows/
         ├── ci.yml            # Pipeline de Linting (Ruff).
         └── schedule_test.yml # Pipeline Completo de Testes (Pytest).
@@ -209,7 +209,7 @@ Para garantir a estabilidade de uma aplicação crítica de segurança pública,
 4.  **Testes de Resiliência de IA** (`test_agent_mock.py`):
     *   Simula falhas na API principal (Groq/Llama 3) para garantir que o sistema ativa automaticamente o **Fallback** para o Google Gemini, mantendo o serviço operacional mesmo em crises.
 
-## 🤖 Reconstrução do Projeto (Prompt Engineering)
+## Reconstrução do Projeto (Prompt Engineering)
 
 Este projeto inclui um **"Playbook de Reconstrução"** no arquivo `prompt.txt`.
 
@@ -220,3 +220,208 @@ Trata-se de um manual de engenharia de prompt que permite recriar toda a arquite
 *   **Melhores Práticas**: Instruções que garantem código seguro, validado e documentado.
 
 Caso deseje escalar ou refatorar o projeto, utilize o `prompt.txt` como guia mestre.
+
+---
+
+# Guia Didático de Engenharia de Prompt (`prompt2.txt`)
+
+## Engenharia de Prompt e Contexto
+
+### Anatomia de Prompts Eficazes
+
+#### Padrões de Efetividade Comprovados
+
+**1. Regra dos 4 Cs:**
+*   **Claro**: Instruções sem ambiguidade.
+*   **Conciso**: Elimina redundância, mantém o essencial.
+*   **Completo**: Inclui todos os requisitos.
+*   **Consistente**: Padrão previsível nas respostas.
+
+**2. Estrutura O-R-A:**
+*   **Objetivo**: O que deve ser alcançado.
+*   **Regras**: Limitações e condições.
+*   **Ação**: Processo específico a seguir.
+
+**3. Hierarquia de Prioridades:**
+*   1º Segurança/Ética (Não negociável).
+*   2º Formato/Especificação (Crítico para integração).
+*   3º Domínio/Expertise (Qualidade da resposta).
+*   4º Estilo/Comunicação (Experiência do usuário).
+
+### Estrutura de Mensagens: System, User e Assistant
+
+Sistemas de LLM modernos utilizam um sistema de papéis hierárquico:
+
+#### 1. System Message (Mensagem do Sistema)
+*Propósito*: Configurar o contexto permanente e as regras de comportamento.
+*Características*: Primeira mensagem, invisível ao usuário final, define a "Persona".
+
+*Exemplo de Prompt*:
+```json
+{
+  "role": "system",
+  "content": "Você é o núcleo de inteligência do AgenteNoticiasSegPub. Sua função é analisar dados de segurança pública do Distrito Federal. REGRAS: 1. Foco exclusivo em PMDF, PCDF, CBMDF. 2. Formate a saída sempre em JSON."
+}
+```
+
+#### 2. User Message (Mensagem do Usuário)
+*Propósito*: A entrada do usuário ou os dados brutos a serem processados.
+
+*Exemplo*:
+```json
+{
+  "role": "user", 
+  "content": "Resultados da busca web: [DADOS BRUTOS]. Gere o relatório de inteligência."
+}
+```
+
+#### 3. Assistant Message (Mensagem do Assistente)
+*Propósito*: Histórico de respostas ou exemplos (Few-Shot Learning).
+
+*Exemplo (Few-Shot)*:
+```json
+[
+    {"role": "user", "content": "Notícia: 'PMDF apreende drogas...'"},
+    {"role": "assistant", "content": "{\"status\": \"sucesso\", ...}"}
+]
+```
+
+### Papel do System Prompt na Definição de Comportamento
+
+#### Componentes Estratégicos
+
+**A. Definição de Identidade (Persona)**
+Alinha o modelo com o domínio específico.
+```python
+"""
+Você é 'AgenteSegPub-Core', especialista em monitoramento de incidentes e análise criminal no DF.
+"""
+```
+
+**B. Regras de Comportamento (Constraints)**
+Reduz alucinações.
+```python
+"""
+REGRAS ABSOLUTAS:
+1. NUNCA invente fatos.
+2. SEMPRE cite a fonte original.
+3. Ignore notícias de fora do DF.
+"""
+```
+
+**C. Instruções de Processamento (Process)**
+Garante consistência.
+```python
+"""
+PROCESSO:
+1. Filtragem (É segurança do DF?)
+2. Extração (Quem, Quando, Onde?)
+3. Estruturação (JSON para DB)
+"""
+```
+
+**D. Configuração de Tom (Tone)**
+Adapta a comunicação.
+```python
+"""
+TOM: Jornalístico, Técnico e Imparcial (Estilo Briefing).
+"""
+```
+
+### Formatação de Saída: Técnicas Avançadas
+
+#### H. JSON (Integração de Sistemas)
+Ideal para comunicação Backend <-> IA.
+```python
+"""
+FORMATO DE RESPOSTA (JSON):
+{
+    "incidentes": [{ "titulo": "string", "local": "string" }],
+    "risco": "alto|medio|baixo"
+}
+"""
+```
+
+#### J. Markdown (Visualização Humana)
+Ideal para relatórios no Frontend (Streamlit).
+```python
+"""
+Analise os dados e responda em Markdown:
+# Relatório Semanal
+## Panorama Geral
+...
+"""
+```
+
+---
+
+# Blueprint de Construção do Projeto (`prompt.txt`)
+
+## 1. Conceito e Estratégia
+Este documento contém a sequência de prompts para reconstruir o projeto "Agente de Notícias de Segurança Pública" do zero.
+
+### DNA do Projeto
+*   **Arquitetura**: Microsserviços (Frontend Streamlit + Backend FastAPI + Redis + Worker).
+*   **Stack**: Python 3.10, Docker Compose, SQLite.
+*   **Diferencial**: Resiliência e Testabilidade.
+
+## 2. System Prompt Mestre (A Persona)
+*Prompt inicial para definir o Arquiteto de Software.*
+
+```json
+{
+  "role": "system",
+  "content": "Você é um Arquiteto de Software Sênior especializado em Python e Microsserviços. SUA MISSÃO: Liderar o desenvolvimento do 'AgenteNoticiasSegPub'. DIRETRIZES: Stack FastAPI/Streamlit/Redis, Segurança via API Key, Código resiliente."
+}
+```
+
+## 3. Fase 1: Infraestrutura e Ambiente
+*Objetivo: Base Docker e Estrutura de Pastas.*
+
+### Prompt 1.1: Estrutura e Docker
+**Objetivo**: Configurar Docker Compose orquestrando Frontend, Backend e Redis.
+**Ação**: Gerar `docker-compose.yml`, `Dockerfile` e `requirements.txt`.
+
+## 4. Fase 2: Backend Core e Dados
+*Objetivo: API, Banco de Dados e Logs.*
+
+### Prompt 2.1: Modelos e Banco de Dados
+**Objetivo**: Criar `backend/models.py` (Pydantic) e `backend/database.py` (SQLite).
+**Regras**: Usar `sqlite3` nativo e implementar logs.
+
+### Prompt 2.2: API Main e Segurança
+**Objetivo**: Criar `backend/main.py`.
+**Funcionalidades**: Middleware de Auth (`X-API-Key`), Endpoints `/news` (com Cache Redis) e `/chat`.
+
+## 5. Fase 3: Lógica de Negócio (ETL & AI)
+*Objetivo: Coletores e Agente Inteligente.*
+
+### Prompt 3.1: Fetchers (Coletores)
+**Objetivo**: Criar `backend/fetchers.py`.
+**Métodos**: Google RSS, GDELT, DuckDuckGo. Implementar `fetch_all` com deduplicação.
+
+### Prompt 3.2: Agendador (Scheduler)
+**Objetivo**: Atualizar `backend/main.py` com `APScheduler`.
+**Ação**: Jobs às 11:00 e 23:00. Endpoint `/force-fetch`.
+
+### Prompt 3.3: Agente de IA com Fallback
+**Objetivo**: Criar `backend/agent.py`.
+**Lógica**: Tentar Groq (Llama 3). Se falhar, ativar Fallback para Google Gemini.
+
+## 6. Fase 4: Frontend
+*Objetivo: Interface Visual.*
+
+### Prompt 4.1: Aplicação Streamlit
+**Objetivo**: Criar `app.py`.
+**Layout**: Sidebar (Configs), Tab Monitoramento (Cards de Notícias), Tab Chat (Interação com IA).
+
+## 7. Fase 5: Qualidade e Testes
+*Objetivo: Garantir estabilidade.*
+
+### Prompt 5.1: Testes Automatizados
+**Objetivo**: Criar suite `tests/`.
+**Escopo**: `test_api.py` (Integração), `test_core_logic.py` (Unitários DB/Parser), `test_scheduler.py` (Jobs).
+
+### Prompt 5.2: CI/CD Pipeline
+**Objetivo**: Criar `.github/workflows/schedule_test.yml`.
+**Configuração**: Rodar `pytest` a cada push na main.
