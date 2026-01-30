@@ -20,9 +20,13 @@ st.set_page_config(
 config = None
 
 # 1. Tentar carregar de st.secrets (Produção/Streamlit Cloud)
-# O Streamlit carrega secrets automaticamente como um dicionário
-if 'credentials' in st.secrets:
-    config = st.secrets
+try:
+    if 'credentials' in st.secrets:
+        config = st.secrets
+except Exception:
+    # Se st.secrets falhar (ex: não existe arquivo secrets.toml local),
+    # apenas ignoramos e tentamos o arquivo yaml abaixo.
+    pass
 
 # 2. Se não houver secrets, tentar carregar arquivo local (Desenvolvimento)
 if not config:
