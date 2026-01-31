@@ -19,84 +19,106 @@ Este projeto foi desenvolvido no âmbito do MBA em Inteligência Artificial Gene
 
 ---
 
-##  Arquitetura da Solução
+## Arquitetura Híbrida em Nuvem
 
-O sistema foi arquitetado para alta disponibilidade e escalabilidade, utilizando **Docker Compose** para orquestrar os serviços.
+O sistema opera em uma arquitetura de microsserviços distribuída, otimizada para tirar proveito dos planos gratuitos de grandes provedores de nuvem (Render e Streamlit Cloud).
 
 ```mermaid
 graph TD
-    User((Usuário)) -->|Acessa| UI[Frontend Streamlit]
-    UI -->|HTTP/JSON + API Key| API[Backend FastAPI]
+    User((Usuário)) -->|HTTPS| UI[Frontend Streamlit Cloud]
     
-    subgraph "Core Services"
-        API -->|Cache/Rate Limit| Redis[(Redis Cache)]
-        API -->|Persistência| DB[(SQLite/Postgres)]
-        API -->|Agendamento| Cron[APScheduler]
+    subgraph "Render.com (Backend)"
+        API[Backend FastAPI]
+        Cron[Agendador Automático]
     end
     
-    subgraph "AI & External"
-        API -->|LLM Query| Groq[Groq AI]
-        Groq -.->|Fallback| Gemini[Google Gemini]
-        Cron -->|Fetch| Sources[Google News / GDELT / DDGS]
+    subgraph "Persistência & Cache"
+        Redis[(Redis Cache)]
+        DB[(SQLite Interno)]
     end
+
+    UI -->|JSON + API Key| API
+    API --> Redis
+    API --> DB
+    
+    API -->|IA| Groq[Groq Llama 3]
+    Groq -.->|Fallback| Gemini[Google Gemini]
 ```
-
-O sistema foi arquitetado para alta disponibilidade e escalabilidade, utilizando **Docker Compose** para orquestrar os serviços.
-
 
 ### Componentes Principais
 
-1.  **Frontend (Streamlit)**: Interface intuitiva para analistas visualizarem notícias e conversarem com o Agente de IA.
-2.  **Backend (FastAPI)**: API RESTful robusta com documentação automática (Swagger/Redoc).
-3.  **Database Layer**:
-    *   **SQLite**: Persistência relacional de notícias e logs.
-    *   **Redis**: Cache de alta performance e *Circuit Breaker* para APIs externas.
-4.  **AI Engine**: Sistema híbrido com **Groq (Llama 3)** para velocidade e **Google Gemini** como fallback para robustez.
+1.  **Frontend (Streamlit Cloud)**: Hospeda a interface do usuário. Leve, rápido e se conecta ao backend via API.
+2.  **Backend (Render.com)**: O "cérebro" do sistema. Hospeda a API FastAPI, o banco de dados SQLite e o Scheduler. 
+    *   *Nota: O Render mantém o serviço ativo para processar as requisições do frontend.*
+3.  **Segurança**: A comunicação entre Front e Back é protegida por `X-API-Key`.
 
 ---
 
-## Funcionalidades Enterprise
+## Guia de Implantação e Execução
 
--   **Segurança Avançada**: Autenticação via `X-API-Key` em todos os endpoints, protegendo o acesso ao backend.
--   **Coleta Automatizada**: Jobs agendados (11:00 e 23:00) coletam notícias de múltiplas fontes (Google RSS, NewsAPI, GDELT) automaticamente.
--   **Resiliência**: Sistema de *Circuit Breaker* impede que falhas em APIs externas derrubem a aplicação.
--   **Dockerizado**: Builds multi-estágio otimizados para imagens leves e seguras.
--   **Qualidade de Código**: Pipeline de CI/CD (GitHub Actions) com testes automatizados (`pytest`) e linting (`ruff`).
--   **Observabilidade**: Logs estruturados em JSON prontos para ingestão em ferramentas como CloudWatch ou Datadog.
+Este projeto pode ser rodado de duas formas: **Localmente** (para desenvolvimento) ou **Na Nuvem** (para produção real).
+
+### 1. Desenvolvimento Local (Sua Máquina)
+
+Use este método para testar mudanças no código antes de enviar para o GitHub.
+
+1.  **Instale as dependências**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2.  **Inicie o Backend (Servidor)**:
+    ```bash
+    # Terminal 1
+    python -m uvicorn backend.main:app --reload --port 8001
+    ```
+
+3.  **Inicie o Frontend (Interface)**:
+    ```bash
+    # Terminal 2
+    streamlit run app.py
+    ```
+    *O App abrirá automaticamente no seu navegador (http://localhost:8501).*
 
 ---
 
-## Instalação e Execução
+### 2. Implantação em Nuvem (Produção)
 
-### Pré-requisitos
--   Docker e Docker Compose instalados.
--   **Segurança**: Crie um arquivo `.env` baseado no `.env.example`.
-    > **IMPORTANTE**: Defina uma `APP_API_KEY` forte para proteger sua API. Nunca commite o arquivo `.env`.
+Para colocar o sistema no ar "de verdade", usamos uma estratégia dividida:
 
-### 1. Execução via Docker (Recomendado)
+#### Passo A: Backend (Render.com)
+O Backend processa os dados e a inteligência artificial.
+1.  Crie uma conta no [Render](https://render.com/).
+2.  Clique em **New > Blueprint**.
+3.  Conecte seu repositório GitHub (`AgenteNoticiasSegPub`).
+4.  O Render detectará automaticamente o arquivo `render.yaml`.
+5.  Preencha as variáveis de ambiente solicitadas:
+    *   `GROQ_API_KEY`: Sua chave da Groq.
+    *   `GOOGLE_API_KEY`: Sua chave do Google AI.
+    *   `APP_API_KEY`: Crie uma senha forte (ex: `Segredo123`). **Anote-a!**
+6.  Clique em **Apply**. O deploy levará ~3 minutos.
+7.  **Copie a URL do serviço** gerado (ex: `https://agente-segpub-api-xyz.onrender.com`).
 
-Suba todo o ambiente com um único comando:
+#### Passo B: Frontend (Streamlit Cloud)
+O Frontend é o visual que você acessa.
+1.  Acesse o [Streamlit Cloud](https://streamlit.io/cloud).
+2.  Crie um novo App conectado ao mesmo repositório GitHub.
+3.  Vá em **Settings > Secrets** e configure a conexão com o Backend:
 
-```bash
-docker-compose up --build -d
+```toml
+# URL que você copiou do Render (SEM BARRA NO FINAL)
+API_URL = "https://agente-segpub-api-xyz.onrender.com"
+
+# A senha que você criou no passo anterior
+APP_API_KEY = "Segredo123"
+
+# Configurações de Login (Copie do seu auth_config.yaml local)
+[credentials]
+usernames.admin.password = "..."
+...
 ```
 
-Acesse:
--   **Frontend**: http://localhost:8501
--   **API Docs**: http://localhost:8001/docs
-
-### 2. Desenvolvimento Local
-
-```bash
-# Instalar dependências
-pip install -r requirements.txt
-
-# Executar Backend
-python -m uvicorn backend.main:app --reload --port 8001
-
-# Executar Frontend (em outro terminal)
-streamlit run app.py
-```
+4.  Reinicie o App, ele estará conectado ao seu Backend na nuvem
 
 ---
 
