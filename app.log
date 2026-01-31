@@ -234,3 +234,127 @@
 2026-01-30 11:59:28,997 - AgenteSegPub - INFO - Database initialized/checked.
 2026-01-30 11:59:29,019 - AgenteSegPub - WARNING - ⚠️ ADD_API_KEY not set! using insecure default for dev.
 2026-01-30 11:59:30,213 - AgenteSegPub - INFO - 🚀 Starting up Intelligence News Hub...
+2026-01-30 11:59:34,295 - AgenteSegPub - WARNING - ⚠️ Redis Connection Failed (Error 10061 connecting to localhost:6379. Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.). Cache disabled.
+2026-01-30 11:59:34,303 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 11:59:34,310 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 11:59:34,323 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 11:59:34,330 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 11:59:34,337 - apscheduler.scheduler - INFO - Scheduler started
+2026-01-30 11:59:34,345 - AgenteSegPub - INFO - ⏰ Scheduler started (Jobs at 11:00 and 23:00)
+2026-01-30 12:06:31,652 - AgenteSegPub - INFO - Database initialized/checked.
+2026-01-30 12:06:31,661 - AgenteSegPub - WARNING - ⚠️ ADD_API_KEY not set! using insecure default for dev.
+2026-01-30 12:06:32,096 - AgenteSegPub - INFO - 🚀 Starting up Intelligence News Hub...
+2026-01-30 12:06:36,173 - AgenteSegPub - WARNING - ⚠️ Redis Connection Failed (Error 10061 connecting to localhost:6379. Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.). Cache disabled.
+2026-01-30 12:06:36,181 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 12:06:36,189 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 12:06:36,200 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 12:06:36,209 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 12:06:36,218 - apscheduler.scheduler - INFO - Scheduler started
+2026-01-30 12:06:36,228 - AgenteSegPub - INFO - ⏰ Scheduler started (Jobs at 11:00 and 23:00)
+2026-01-30 12:07:57,138 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:08:01,531 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:08:56,876 - AgenteSegPub - INFO - Database initialized/checked.
+2026-01-30 12:08:56,888 - AgenteSegPub - WARNING - ⚠️ ADD_API_KEY not set! using insecure default for dev.
+2026-01-30 12:08:57,343 - AgenteSegPub - INFO - 🚀 Starting up Intelligence News Hub...
+2026-01-30 12:09:01,428 - AgenteSegPub - WARNING - ⚠️ Redis Connection Failed (Error 10061 connecting to localhost:6379. Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.). Cache disabled.
+2026-01-30 12:09:01,436 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 12:09:01,446 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 12:09:01,456 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 12:09:01,465 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 12:09:01,473 - apscheduler.scheduler - INFO - Scheduler started
+2026-01-30 12:09:01,482 - AgenteSegPub - INFO - ⏰ Scheduler started (Jobs at 11:00 and 23:00)
+2026-01-30 12:22:10,830 - AgenteSegPub - INFO - Database initialized/checked.
+2026-01-30 12:22:10,840 - AgenteSegPub - WARNING - ⚠️ ADD_API_KEY not set! using insecure default for dev.
+2026-01-30 12:22:11,326 - AgenteSegPub - INFO - 🚀 Starting up Intelligence News Hub...
+2026-01-30 12:22:15,399 - AgenteSegPub - WARNING - ⚠️ Redis Connection Failed (Error 10061 connecting to localhost:6379. Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.). Cache disabled.
+2026-01-30 12:22:15,409 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 12:22:15,417 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 12:22:15,427 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 12:22:15,437 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 12:22:15,446 - apscheduler.scheduler - INFO - Scheduler started
+2026-01-30 12:22:15,455 - AgenteSegPub - INFO - ⏰ Scheduler started (Jobs at 11:00 and 23:00)
+2026-01-30 12:31:54,093 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:31:54,266 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:31:54,363 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:34:37,816 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:34:37,971 - AgenteSegPub - INFO - External search for 'Crime Hospital Anchieta Taguatinga'
+2026-01-30 12:34:39,156 - primp - INFO - response: https://pt.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Crime%20Hospital%20Anchieta%20Taguatinga%20Distrito%20Federal 200
+2026-01-30 12:34:39,487 - primp - INFO - response: https://grokipedia.com/api/typeahead?query=Crime+Hospital+Anchieta+Taguatinga+Distrito+Federal&limit=1 200
+2026-01-30 12:34:40,273 - primp - INFO - response: https://search.yahoo.com/search;_ylt=BrkY1bZiyK9DKBmiVy10TEcx;_ylu=z-9vkTppKiM-atw78NLxli4f6CciTgVV-hQ85qGsQ4LWk7I?p=Crime+Hospital+Anchieta+Taguatinga+Distrito+Federal 200
+2026-01-30 12:34:40,965 - primp - INFO - response: https://www.google.com/search?q=Crime+Hospital+Anchieta+Taguatinga+Distrito+Federal&filter=0&start=0&hl=pt-BR&lr=lang_pt&cr=countryBR 200
+2026-01-30 12:34:41,755 - AgenteSegPub - INFO - Saved 6 new items to DB.
+2026-01-30 12:34:44,559 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:34:47,406 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:34:51,783 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:36:57,794 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:36:58,975 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:36:59,280 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:37:11,605 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:37:18,654 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:37:18,822 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:37:18,976 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:37:19,809 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:38:03,039 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:38:03,301 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:38:03,415 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:38:04,208 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:38:04,390 - AgenteSegPub - INFO - External search for 'Crime Hospital Anchieta Taguatinga'
+2026-01-30 12:38:04,553 - primp - INFO - response: https://pt.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Crime%20Hospital%20Anchieta%20Taguatinga%20Distrito%20Federal 200
+2026-01-30 12:38:04,961 - primp - INFO - response: https://grokipedia.com/api/typeahead?query=Crime+Hospital+Anchieta+Taguatinga+Distrito+Federal&limit=1 200
+2026-01-30 12:38:05,990 - httpx - INFO - HTTP Request: POST https://html.duckduckgo.com/html/ "HTTP/2 200 OK"
+2026-01-30 12:38:06,020 - AgenteSegPub - INFO - Saved 4 new items to DB.
+2026-01-30 12:38:10,076 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 12:38:13,154 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:49:26,724 - AgenteSegPub - INFO - Database initialized/checked.
+2026-01-30 21:49:26,737 - AgenteSegPub - WARNING - ⚠️ ADD_API_KEY not set! using insecure default for dev.
+2026-01-30 21:49:27,441 - AgenteSegPub - INFO - 🚀 Starting up Intelligence News Hub...
+2026-01-30 21:49:31,510 - AgenteSegPub - WARNING - ⚠️ Redis Connection Failed (Error 10061 connecting to localhost:6379. Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.). Cache disabled.
+2026-01-30 21:49:31,519 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 21:49:31,532 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 21:49:31,546 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 21:49:31,561 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 21:49:31,570 - apscheduler.scheduler - INFO - Scheduler started
+2026-01-30 21:49:31,581 - AgenteSegPub - INFO - ⏰ Scheduler started (Jobs at 11:00 and 23:00)
+2026-01-30 21:51:03,332 - AgenteSegPub - INFO - Database initialized/checked.
+2026-01-30 21:51:03,344 - AgenteSegPub - WARNING - ⚠️ ADD_API_KEY not set! using insecure default for dev.
+2026-01-30 21:51:03,865 - AgenteSegPub - INFO - 🚀 Starting up Intelligence News Hub...
+2026-01-30 21:51:07,921 - AgenteSegPub - WARNING - ⚠️ Redis Connection Failed (Error 10061 connecting to localhost:6379. Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.). Cache disabled.
+2026-01-30 21:51:07,930 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 21:51:07,938 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 21:51:07,949 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 21:51:07,957 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 21:51:07,970 - apscheduler.scheduler - INFO - Scheduler started
+2026-01-30 21:51:07,979 - AgenteSegPub - INFO - ⏰ Scheduler started (Jobs at 11:00 and 23:00)
+2026-01-30 21:51:34,895 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:51:37,839 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:52:27,056 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:52:27,237 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:52:27,330 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:52:48,808 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:53:00,907 - AgenteSegPub - INFO - External search for 'Hospital Anchieta Taguatinga Crime'
+2026-01-30 21:53:01,863 - primp - INFO - response: https://pt.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Hospital%20Anchieta%20Taguatinga%20Crime%20Distrito%20Federal 200
+2026-01-30 21:53:02,109 - primp - INFO - response: https://grokipedia.com/api/typeahead?query=Hospital+Anchieta+Taguatinga+Crime+Distrito+Federal&limit=1 200
+2026-01-30 21:53:03,448 - httpx - INFO - HTTP Request: POST https://html.duckduckgo.com/html/ "HTTP/2 200 OK"
+2026-01-30 21:53:03,536 - AgenteSegPub - INFO - Saved 2 new items to DB.
+2026-01-30 21:53:07,320 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:53:10,574 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:56:41,766 - AgenteSegPub - INFO - Database initialized/checked.
+2026-01-30 21:56:41,783 - AgenteSegPub - WARNING - ⚠️ ADD_API_KEY not set! using insecure default for dev.
+2026-01-30 21:56:42,360 - AgenteSegPub - INFO - 🚀 Starting up Intelligence News Hub...
+2026-01-30 21:56:46,435 - AgenteSegPub - WARNING - ⚠️ Redis Connection Failed (Error 10061 connecting to localhost:6379. Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.). Cache disabled.
+2026-01-30 21:56:46,444 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 21:56:46,468 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-30 21:56:46,477 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 21:56:46,487 - apscheduler.scheduler - INFO - Added job "scheduled_fetch_job" to job store "default"
+2026-01-30 21:56:46,495 - apscheduler.scheduler - INFO - Scheduler started
+2026-01-30 21:56:46,504 - AgenteSegPub - INFO - ⏰ Scheduler started (Jobs at 11:00 and 23:00)
+2026-01-30 21:57:43,367 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:57:47,856 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:57:48,049 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:57:48,124 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:58:02,083 - AgenteSegPub - WARNING - ⛔ Unauthorized access attempt from 127.0.0.1
+2026-01-30 21:58:23,935 - AgenteSegPub - INFO - External search for 'Operação PCDF 30/01/2026'
+2026-01-30 21:58:24,556 - primp - INFO - response: https://pt.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Opera%C3%A7%C3%A3o%20PCDF%2030/01/2026%20Distrito%20Federal 200
+2026-01-30 21:58:24,814 - primp - INFO - response: https://grokipedia.com/api/typeahead?query=Opera%C3%A7%C3%A3o+PCDF+30%2F01%2F2026+Distrito+Federal&limit=1 200
+2026-01-30 21:58:25,105 - primp - INFO - response: https://www.google.com/search?q=Opera%C3%A7%C3%A3o+PCDF+30%2F01%2F2026+Distrito+Federal&filter=0&start=0&hl=pt-BR&lr=lang_pt&cr=countryBR 200
+2026-01-30 21:58:25,746 - AgenteSegPub - INFO - Saved 9 new items to DB.

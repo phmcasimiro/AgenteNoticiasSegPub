@@ -161,7 +161,7 @@ if st.session_state.get('authentication_status'):
                                 # O agente já faz a busca internamente se necessário, mas podemos passar a query de análise
                                 # Ou passar os dados recuperados para ele resumir.
                                 # Como o Agente Groq está configurado com Tool Use de busca, podemos apenas passar a query original.
-                                chat_response = httpx.get(f"{API_URL}/chat", params={"q": query}, timeout=60.0)
+                                chat_response = httpx.get(f"{API_URL}/chat", params={"q": query}, headers=headers, timeout=60.0)
                                 if chat_response.status_code == 200:
                                     # O endpoint retorna {"response": ...}
                                     analysis = chat_response.json().get("response")
