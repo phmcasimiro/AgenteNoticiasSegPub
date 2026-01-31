@@ -173,6 +173,12 @@ if st.session_state.get('authentication_status'):
 
                     else:
                         st.error(f"Erro na API: {response.status_code}")
+                        # --- DEBUG INFO ---
+                        with st.expander("🕵️‍♂️ Detalhes Técnicos (Debug)"):
+                            st.write(f"**URL Tentada:** `{API_URL}/news`")
+                            st.write(f"**Status Code:** {response.status_code}")
+                            st.text(f"Resposta Raw: {response.text}")
+                            st.write(f"**API Key (Parcial):** {headers.get('X-API-Key')[:4]}***")
 
                 except Exception as e:
                     st.error(f"Erro de conexão com o backend: {e}")
