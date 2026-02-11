@@ -19,30 +19,88 @@ Este projeto foi desenvolvido no âmbito do MBA em Inteligência Artificial Gene
 
 ---
 
-## Arquitetura Híbrida em Nuvem
+## Arquitetura e Fluxos do Sistema
 
-O sistema opera em uma arquitetura de microsserviços distribuída, otimizada para tirar proveito dos planos gratuitos de grandes provedores de nuvem (Render e Streamlit Cloud).
+### 1. Fluxograma de Dados (Data Flow)
+O diagrama abaixo ilustra como os dados transitam desde as fontes externas até a interface do usuário, passando pelas camadas de persistência e cache.
 
 ```mermaid
-graph TD
-    User((Usuário)) -->|HTTPS| UI[Frontend Streamlit Cloud]
-    
-    subgraph "Render.com (Backend)"
-        API[Backend FastAPI]
-        Cron[Agendador Automático]
-    end
-    
-    subgraph "Persistência & Cache"
-        Redis[(Redis Cache)]
-        DB[(SQLite Interno)]
+flowchart TD
+    subgraph External["Fontes de Dados Externas"]
+        GNews["Google News RSS"]
+        GDELT["GDELT Project"]
+        NAPI["NewsAPI"]
+        DDG["DuckDuckGo"]
     end
 
-    UI -->|JSON + API Key| API
-    API --> Redis
-    API --> DB
+    subgraph Backend["Backend (FastAPI & Workers)"]
+        Fetcher["Coletores / Fetchers"]
+        Scheduler["Agendador (Cron)"]
+        API["API Endpoints"]
+        Agent["Agente de IA"]
+    end
+
+    subgraph Storage["Persistência & Cache"]
+        DB[("SQLite Database")]
+        Redis[("Redis Cache")]
+    end
+
+    subgraph Frontend["Frontend (Streamlit)"]
+        UI["Interface do Usuário"]
+        User(("Usuário"))
+    end
+
+    %% Ingestão de Dados
+    Scheduler -->|"Gatilho (11:00/23:00)"| Fetcher
+    Fetcher <-->|"HTTP/JSON"| External
+    Fetcher -->|"Gravação"| DB
     
-    API -->|IA| Groq[Groq Llama 3]
-    Groq -.->|Fallback| Gemini[Google Gemini]
+    %% Consumo pelo Usuário
+    User -->|"Busca/Interação"| UI
+    UI -->|"GET /news (c/ API Key)"| API
+    
+    %% Lógica de Recuperação
+    API -->|"1. Leitura Rápida"| Redis
+    API -->|"2. Leitura Persistente"| DB
+    API -->|"3. Busca em Tempo Real (Miss)"| Fetcher
+    
+    %% Lógica de IA
+    UI -->|"GET /chat"| API
+    API -->|"Processamento"| Agent
+    Agent -->|"Injeção de Contexto"| Groq["Groq Llama 3"]
+    Groq -.->|"Fallback de Erro"| Gemini["Google Gemini"]
+```
+
+### 2. Fluxograma de Funções (Lógica de Execução)
+Detalhamento do comportamento das principais rotas da API e da lógica de decisão do Agente.
+
+```mermaid
+flowchart TD
+    Start(["Requisição do Cliente"]) --> Auth{"API Key Válida?"}
+    Auth -- Não --> Deny["401 Unauthorized"]
+    Auth -- Sim --> Route{"Qual Endpoint?"}
+
+    %% Lógica /news
+    Route -- GET /news --> CheckRedis{"Cache Hit?"}
+    CheckRedis -- Sim --> ReturnCache["Retorna JSON do Redis"]
+    CheckRedis -- Não --> CheckDB{"DB Hit?"}
+    
+    CheckDB -- Sim --> ReturnDB["Retorna do SQLite"]
+    CheckDB -- Não --> FetchExt["Executa Fetchers Externos"]
+    
+    FetchExt --> Save["Salva no DB e Atualiza Redis"]
+    Save --> ReturnNew["Retorna Novos Dados"]
+
+    %% Lógica /chat
+    Route -- GET /chat --> InitAgent["Inicializa Agente"]
+    InitAgent --> CallGroq["Chamada Inferência Groq"]
+    
+    CallGroq --> Success{"Sucesso?"}
+    Success -- Sim --> ReturnAI["Retorna Resposta Gerada"]
+    
+    Success -- Não (Rate Limit/Erro) --> Log["Log de Erro"]
+    Log --> Fallback["Ativa Fallback: Google Gemini"]
+    Fallback --> ReturnAI
 ```
 
 ### Componentes Principais
